@@ -7,230 +7,51 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --ink: #1a1a2e;
-    --paper: #f5f0e8;
-    --accent: #c84b31;
-    --mid: #8a7e6e;
-    --light: #e8e0d0;
-    --green: #2d6a4f;
-  }
-
-  body {
-    font-family: 'DM Mono', monospace;
-    background: var(--paper);
-    color: var(--ink);
-    min-height: 100vh;
-    padding: 40px 24px;
-  }
-
+  :root { --ink: #1a1a2e; --paper: #f5f0e8; --accent: #c84b31; --mid: #8a7e6e; --light: #e8e0d0; --green: #2d6a4f; }
+  body { font-family: 'DM Mono', monospace; background: var(--paper); color: var(--ink); min-height: 100vh; padding: 40px 24px; }
   .container { max-width: 780px; margin: 0 auto; }
-
-  header {
-    border-bottom: 2px solid var(--ink);
-    padding-bottom: 20px;
-    margin-bottom: 40px;
-  }
-
-  .title {
-    font-family: 'Fraunces', serif;
-    font-size: 2.4rem;
-    font-weight: 600;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-  }
-
-  .title span {
-    color: var(--accent);
-    font-style: italic;
-    font-weight: 300;
-  }
-
-  .subtitle {
-    font-size: 0.75rem;
-    color: var(--mid);
-    margin-top: 8px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .rules-box {
-    background: var(--ink);
-    color: var(--paper);
-    padding: 20px 24px;
-    margin-bottom: 32px;
-    font-size: 0.72rem;
-    line-height: 1.8;
-    border-radius: 2px;
-  }
-
-  .rules-box strong {
-    color: #f0b429;
-    display: block;
-    font-size: 0.65rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-
+  header { border-bottom: 2px solid var(--ink); padding-bottom: 20px; margin-bottom: 40px; }
+  .title { font-family: 'Fraunces', serif; font-size: 2.4rem; font-weight: 600; line-height: 1.1; letter-spacing: -0.02em; }
+  .title span { color: var(--accent); font-style: italic; font-weight: 300; }
+  .subtitle { font-size: 0.75rem; color: var(--mid); margin-top: 8px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .rules-box { background: var(--ink); color: var(--paper); padding: 20px 24px; margin-bottom: 32px; font-size: 0.72rem; line-height: 1.8; border-radius: 2px; }
+  .rules-box strong { color: #f0b429; display: block; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 8px; }
   .rules-box ul { list-style: none; padding: 0; }
   .rules-box li::before { content: '→ '; color: var(--accent); }
-
-  .drop-zone {
-    border: 2px dashed var(--mid);
-    padding: 48px 24px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s;
-    background: white;
-    border-radius: 2px;
-    margin-bottom: 24px;
-  }
-
-  .drop-zone:hover, .drop-zone.drag-over {
-    border-color: var(--accent);
-    background: #fff8f6;
-  }
-
+  .drop-zone { border: 2px dashed var(--mid); padding: 48px 24px; text-align: center; cursor: pointer; transition: all 0.2s; background: white; border-radius: 2px; margin-bottom: 24px; }
+  .drop-zone:hover, .drop-zone.drag-over { border-color: var(--accent); background: #fff8f6; }
   .drop-zone .icon { font-size: 2.5rem; margin-bottom: 12px; }
-
   .drop-zone p { font-size: 0.8rem; color: var(--mid); }
-
-  .drop-zone p strong {
-    color: var(--ink);
-    display: block;
-    font-size: 1rem;
-    margin-bottom: 4px;
-    font-family: 'Fraunces', serif;
-    font-weight: 600;
-  }
-
+  .drop-zone p strong { color: var(--ink); display: block; font-size: 1rem; margin-bottom: 4px; font-family: 'Fraunces', serif; font-weight: 600; }
   #fileInput { display: none; }
-
-  .btn {
-    display: inline-block;
-    background: var(--accent);
-    color: white;
-    border: none;
-    padding: 14px 32px;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.8rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: background 0.15s;
-    border-radius: 2px;
-  }
-
+  .btn { display: inline-block; background: var(--accent); color: white; border: none; padding: 14px 32px; font-family: 'DM Mono', monospace; font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; transition: background 0.15s; border-radius: 2px; }
   .btn:hover { background: #a83a23; }
   .btn:disabled { background: var(--mid); cursor: not-allowed; }
-
   .btn-secondary { background: var(--green); margin-left: 12px; }
   .btn-secondary:hover { background: #1e4d38; }
-
   #status { margin: 24px 0; font-size: 0.78rem; min-height: 24px; }
-  .status-ok { color: var(--green); }
-  .status-err { color: var(--accent); }
-  .status-info { color: var(--mid); }
-
+  .status-ok { color: var(--green); } .status-err { color: var(--accent); }
   #results { display: none; margin-top: 32px; }
-
-  .results-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 2px solid var(--ink);
-    padding-top: 20px;
-    margin-bottom: 16px;
-  }
-
-  .results-title {
-    font-family: 'Fraunces', serif;
-    font-size: 1.3rem;
-    font-weight: 600;
-  }
-
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-bottom: 24px;
-  }
-
-  .stat {
-    background: white;
-    border: 1px solid var(--light);
-    padding: 16px;
-    text-align: center;
-    border-radius: 2px;
-  }
-
-  .stat-num {
-    font-family: 'Fraunces', serif;
-    font-size: 2rem;
-    font-weight: 600;
-    display: block;
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-
-  .stat-num.green { color: var(--green); }
-  .stat-num.red { color: var(--accent); }
+  .results-header { display: flex; justify-content: space-between; align-items: center; border-top: 2px solid var(--ink); padding-top: 20px; margin-bottom: 16px; }
+  .results-title { font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 600; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+  .stat { background: white; border: 1px solid var(--light); padding: 16px; text-align: center; border-radius: 2px; }
+  .stat-num { font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 600; display: block; line-height: 1; margin-bottom: 4px; }
+  .stat-num.green { color: var(--green); } .stat-num.red { color: var(--accent); }
   .stat-label { font-size: 0.65rem; color: var(--mid); text-transform: uppercase; letter-spacing: 0.08em; }
-
-  .preview-table-wrap {
-    overflow-x: auto;
-    background: white;
-    border: 1px solid var(--light);
-    border-radius: 2px;
-    margin-bottom: 24px;
-    max-height: 320px;
-    overflow-y: auto;
-  }
-
+  .preview-table-wrap { overflow-x: auto; background: white; border: 1px solid var(--light); border-radius: 2px; margin-bottom: 24px; max-height: 320px; overflow-y: auto; }
   table { width: 100%; border-collapse: collapse; font-size: 0.68rem; }
-
-  thead th {
-    background: var(--ink);
-    color: var(--paper);
-    padding: 10px 14px;
-    text-align: left;
-    white-space: nowrap;
-    position: sticky;
-    top: 0;
-    letter-spacing: 0.05em;
-  }
-
+  thead th { background: var(--ink); color: var(--paper); padding: 10px 14px; text-align: left; white-space: nowrap; position: sticky; top: 0; }
   tbody tr:nth-child(even) { background: #faf8f4; }
-
-  tbody td {
-    padding: 8px 14px;
-    border-bottom: 1px solid var(--light);
-    white-space: nowrap;
-    max-width: 180px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
+  tbody td { padding: 8px 14px; border-bottom: 1px solid var(--light); white-space: nowrap; max-width: 160px; overflow: hidden; text-overflow: ellipsis; }
   .preview-note { font-size: 0.68rem; color: var(--mid); margin-bottom: 16px; font-style: italic; }
-
-  footer {
-    margin-top: 60px;
-    border-top: 1px solid var(--light);
-    padding-top: 16px;
-    font-size: 0.65rem;
-    color: var(--mid);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
+  footer { margin-top: 60px; border-top: 1px solid var(--light); padding-top: 16px; font-size: 0.65rem; color: var(--mid); letter-spacing: 0.06em; text-transform: uppercase; }
 </style>
 </head>
 <body>
 <div class="container">
-
   <header>
-    <h1 class="title">APSCA Firms <span>→ MailChimp</span> Cleaner</h1>
+    <h1 class="title">APSCA Firms <span>&rarr; MailChimp</span> Cleaner</h1>
     <p class="subtitle">Drop your firms contact export. Get a clean import file.</p>
   </header>
 
@@ -241,299 +62,240 @@
       <li>Only keeps Firm Status of Full, Provisional, or Blank</li>
       <li>Excludes @theapsca.org and @ksensetech.com email addresses</li>
       <li>Excludes test firms (Test Firm 1, Test Firm 2, Ksense Test Firm etc.)</li>
-      <li>Outputs TRUE/FALSE columns for Contact Role: Contact, Audit Supervisor, Invoicing Supervisor, Background Check Supervisor</li>
-      <li>Outputs TRUE/FALSE columns for User Roles: Auditor Supervisor, Invoicing Supervisor, CPD Training Supervisor, Background Check Supervisor</li>
+      <li>TRUE/FALSE from User Roles (col B): Auditor Supervisor, Invoicing Supervisor, CPD Training Supervisor, Background Check Supervisor</li>
+      <li>TRUE/FALSE from Contact Type (col E): Primary, Secondary, Exam Contact, Ethics Contact, CPD Contact, Reporting Contact, Board of Directors, Other</li>
     </ul>
   </div>
 
   <div class="drop-zone" id="dropZone">
-    <div class="icon">📂</div>
+    <div class="icon">&#128194;</div>
     <p><strong>Drop your CSV file here</strong>click to browse</p>
     <input type="file" id="fileInput" accept=".csv">
   </div>
 
-  <div style="margin-bottom: 24px;">
-    <label style="display:block; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--mid); margin-bottom:8px;">File name for download</label>
-    <div style="display:flex; align-items:center; gap:0; background:white; border:1px solid var(--light); border-radius:2px; overflow:hidden;">
-      <span style="padding:12px 14px; background:var(--light); font-size:0.75rem; color:var(--mid); white-space:nowrap; border-right:1px solid var(--light);" id="datePrefix"></span>
-      <input type="text" id="fileNameInput" placeholder="e.g. APSCA Firms" style="flex:1; border:none; outline:none; padding:12px 14px; font-family:'DM Mono',monospace; font-size:0.78rem; color:var(--ink); background:white;">
-      <span style="padding:12px 14px; font-size:0.75rem; color:var(--mid); background:var(--light); border-left:1px solid var(--light);">.csv</span>
+  <div style="margin-bottom:24px;">
+    <label style="display:block;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--mid);margin-bottom:8px;">File name for download</label>
+    <div style="display:flex;align-items:center;background:white;border:1px solid var(--light);border-radius:2px;overflow:hidden;">
+      <span id="datePrefix" style="padding:12px 14px;background:var(--light);font-size:0.75rem;color:var(--ink);white-space:nowrap;border-right:1px solid var(--mid);"></span>
+      <input type="text" id="fileNameInput" placeholder="e.g. APSCA Firms" style="flex:1;border:none;outline:none;padding:12px 14px;font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--ink);background:white;">
+      <span style="padding:12px 14px;font-size:0.75rem;color:var(--mid);background:var(--light);border-left:1px solid var(--mid);">.csv</span>
     </div>
   </div>
 
   <button class="btn" id="processBtn" disabled>Process File</button>
-
   <div id="status"></div>
 
   <div id="results">
     <div class="results-header">
       <span class="results-title">Results</span>
-      <div>
-        <button class="btn btn-secondary" id="downloadBtn">⬇ Download CSV</button>
-      </div>
+      <button class="btn btn-secondary" id="downloadBtn">&#8595; Download CSV</button>
     </div>
-
     <div class="stats">
-      <div class="stat">
-        <span class="stat-num" id="statTotal">—</span>
-        <span class="stat-label">Rows in file</span>
-      </div>
-      <div class="stat">
-        <span class="stat-num green" id="statKept">—</span>
-        <span class="stat-label">Contacts kept</span>
-      </div>
-      <div class="stat">
-        <span class="stat-num red" id="statRemoved">—</span>
-        <span class="stat-label">Excluded</span>
-      </div>
+      <div class="stat"><span class="stat-num" id="statTotal">-</span><span class="stat-label">Rows in file</span></div>
+      <div class="stat"><span class="stat-num green" id="statKept">-</span><span class="stat-label">Contacts kept</span></div>
+      <div class="stat"><span class="stat-num red" id="statRemoved">-</span><span class="stat-label">Excluded</span></div>
     </div>
-
     <p class="preview-note">Showing first 10 rows preview</p>
     <div class="preview-table-wrap">
       <table>
-        <thead>
-          <tr>
-            <th>Email Address</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Organization</th>
-            <th>Address</th>
-            <th>Phone Number</th>
-            <th>Firm Status</th>
-            <th>Category</th>
-            <th>CR: Contact</th>
-            <th>CR: Audit Supervisor</th>
-            <th>CR: Invoicing Supervisor</th>
-            <th>CR: Background Check Supervisor</th>
-            <th>UR: Auditor Supervisor</th>
-            <th>UR: Invoicing Supervisor</th>
-            <th>UR: CPD Training Supervisor</th>
-            <th>UR: Background Check Supervisor</th>
-          </tr>
-        </thead>
+        <thead><tr>
+          <th>Email Address</th><th>First Name</th><th>Last Name</th>
+          <th>Organization</th><th>Country</th><th>Firm Status</th><th>Category</th>
+          <th>Auditor Supervisor</th><th>Invoicing Supervisor</th><th>CPD Training Supervisor</th><th>Background Check Supervisor</th>
+          <th>Primary</th><th>Secondary</th><th>Exam Contact</th><th>Ethics Contact</th><th>CPD Contact</th><th>Reporting Contact</th><th>Board of Directors</th><th>Other</th>
+        </tr></thead>
         <tbody id="previewBody"></tbody>
       </table>
     </div>
   </div>
 
-  <footer>APSCA Firms MailChimp Cleaner &nbsp;·&nbsp; Drop the same file every time, always get a clean result</footer>
+  <footer>APSCA Firms MailChimp Cleaner &nbsp;&middot;&nbsp; Drop the same file every time, always get a clean result</footer>
 </div>
 
 <script>
-  let parsedOutput = [];
-  let rawFile = null;
-
-  const today = new Date();
-  const dateStr = today.getFullYear() + '.' +
-    String(today.getMonth()+1).padStart(2,'0') + '.' +
-    String(today.getDate()).padStart(2,'0');
+(function() {
+  var today = new Date();
+  var dateStr = today.getFullYear() + '.' + String(today.getMonth()+1).padStart(2,'0') + '.' + String(today.getDate()).padStart(2,'0');
   document.getElementById('datePrefix').textContent = dateStr + ' ';
 
-  const dropZone = document.getElementById('dropZone');
-  const fileInput = document.getElementById('fileInput');
-  const processBtn = document.getElementById('processBtn');
-  const statusEl = document.getElementById('status');
-  const resultsEl = document.getElementById('results');
-  const previewBody = document.getElementById('previewBody');
-  const downloadBtn = document.getElementById('downloadBtn');
+  var parsedOutput = [];
+  var rawFile = null;
 
-  dropZone.addEventListener('click', () => fileInput.click());
-  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
-  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
-  dropZone.addEventListener('drop', e => {
-    e.preventDefault();
-    dropZone.classList.remove('drag-over');
-    const file = e.dataTransfer.files[0];
-    if (file && file.name.endsWith('.csv')) { rawFile = file; setFileReady(file.name); }
+  var dropZone    = document.getElementById('dropZone');
+  var fileInput   = document.getElementById('fileInput');
+  var processBtn  = document.getElementById('processBtn');
+  var statusEl    = document.getElementById('status');
+  var resultsEl   = document.getElementById('results');
+  var previewBody = document.getElementById('previewBody');
+  var downloadBtn = document.getElementById('downloadBtn');
+
+  dropZone.addEventListener('click', function() { fileInput.click(); });
+  dropZone.addEventListener('dragover', function(e) { e.preventDefault(); dropZone.classList.add('drag-over'); });
+  dropZone.addEventListener('dragleave', function() { dropZone.classList.remove('drag-over'); });
+  dropZone.addEventListener('drop', function(e) {
+    e.preventDefault(); dropZone.classList.remove('drag-over');
+    var f = e.dataTransfer.files[0];
+    if (f) { rawFile = f; setFileReady(f.name); }
   });
-  fileInput.addEventListener('change', () => {
+  fileInput.addEventListener('change', function() {
     if (fileInput.files[0]) { rawFile = fileInput.files[0]; setFileReady(fileInput.files[0].name); }
   });
 
   function setFileReady(name) {
-    dropZone.querySelector('p').innerHTML = `<strong>${name}</strong>ready to process`;
+    dropZone.querySelector('p').innerHTML = '<strong>' + name + '</strong>ready to process';
     processBtn.disabled = false;
-    statusEl.innerHTML = '';
+    statusEl.textContent = '';
     resultsEl.style.display = 'none';
     parsedOutput = [];
   }
 
-  processBtn.addEventListener('click', () => {
+  processBtn.addEventListener('click', function() {
     if (!rawFile) return;
-    const reader = new FileReader();
-    reader.onload = e => processCSV(e.target.result);
-    reader.readAsText(rawFile, 'utf-8');
+    var r = new FileReader();
+    r.onload = function(e) { processCSV(e.target.result); };
+    r.readAsText(rawFile, 'utf-8');
   });
 
-  // Proper CSV parser — handles multiline quoted fields correctly
   function parseCSV(text) {
-    const rows = [];
-    let fields = [];
-    let cur = '';
-    let inQuotes = false;
-
-    for (let i = 0; i < text.length; i++) {
-      const ch = text[i];
-      const next = text[i + 1];
-
-      if (ch === '"') {
-        if (inQuotes && next === '"') { cur += '"'; i++; }
-        else inQuotes = !inQuotes;
-      } else if (ch === ',' && !inQuotes) {
+    var rows = [], fields = [], cur = '', inQ = false;
+    for (var i = 0; i < text.length; i++) {
+      var c = text[i], n = text[i+1];
+      if (c === '"') {
+        if (inQ && n === '"') { cur += '"'; i++; }
+        else inQ = !inQ;
+      } else if (c === ',' && !inQ) {
         fields.push(cur); cur = '';
-      } else if (ch === '\r' && next === '\n' && !inQuotes) {
-        i++;
-        fields.push(cur); cur = '';
-        if (fields.some(f => f !== '')) rows.push(fields);
+      } else if (c === '\r' && n === '\n' && !inQ) {
+        i++; fields.push(cur); cur = '';
+        if (fields.some(function(f){return f!=='';})) rows.push(fields.slice());
         fields = [];
-      } else if (ch === '\n' && !inQuotes) {
+      } else if (c === '\n' && !inQ) {
         fields.push(cur); cur = '';
-        if (fields.some(f => f !== '')) rows.push(fields);
+        if (fields.some(function(f){return f!=='';})) rows.push(fields.slice());
         fields = [];
       } else {
-        cur += ch;
+        cur += c;
       }
     }
-    fields.push(cur);
-    if (fields.some(f => f !== '')) rows.push(fields);
+    if (cur !== '' || fields.length) {
+      fields.push(cur);
+      if (fields.some(function(f){return f!=='';})) rows.push(fields);
+    }
     return rows;
   }
 
-  function cleanVal(str) {
-    return (str || '').replace(/<br\s*\/?>/gi, ' ').replace(/&amp;/g, '&').trim();
-  }
+  function clean(s) { return (s||'').replace(/<br\s*\/?>/gi,' ').replace(/&amp;/g,'&').trim(); }
 
-  const EXCLUDED_DOMAINS   = ['theapsca.org', 'ksensetech.com'];
-  const ALLOWED_STATUSES   = ['full', 'provisional', ''];
-  const TEST_FIRM_PATTERNS = ['test firm1', 'test firm 1', 'test firm 2', 'test firm2', 'ksense test firm'];
+  var EXCLUDED_DOMAINS   = ['theapsca.org', 'ksensetech.com'];
+  var ALLOWED_STATUSES   = ['full', 'provisional', ''];
+  var TEST_FIRM_PATTERNS = ['test firm1', 'test firm 1', 'test firm 2', 'test firm2', 'ksense test firm'];
 
-  const CONTACT_ROLES = ['Contact', 'Audit Supervisor', 'Invoicing Supervisor', 'Background Check Supervisor'];
-  const USER_ROLES    = ['Auditor Supervisor', 'Invoicing Supervisor', 'CPD Training Supervisor', 'Background Check Supervisor'];
+  var USER_ROLES    = ['Auditor Supervisor', 'Invoicing Supervisor', 'CPD Training Supervisor', 'Background Check Supervisor'];
+  var CONTACT_TYPES = ['Primary', 'Secondary', 'Exam Contact', 'Ethics Contact', 'CPD Contact', 'Reporting Contact', 'Board of Directors', 'Other'];
+
+  var OUTPUT_HEADERS = [
+    'Email Address', 'First Name', 'Last Name', 'Organization', 'Country', 'Firm Status', 'Category of Membership'
+  ].concat(USER_ROLES).concat(CONTACT_TYPES);
 
   function processCSV(text) {
-    text = text.replace(/^\uFEFF/, '');
-    const allRows = parseCSV(text);
+    text = text.replace(/^\uFEFF/,'');
+    var allRows = parseCSV(text);
     if (allRows.length < 2) { setStatus('File appears empty or invalid.', 'err'); return; }
 
-    const headers = allRows[0].map(cleanVal);
-    const col = name => headers.findIndex(h => h.toLowerCase().includes(name.toLowerCase()));
+    var hdrs = allRows[0].map(clean);
+    function col(name) {
+      for (var i=0; i<hdrs.length; i++) if (hdrs[i].toLowerCase().indexOf(name.toLowerCase())!==-1) return i;
+      return -1;
+    }
+    // Use exact index for columns that need precision
+    var iUserRoles   = 1;   // Column B
+    var iContType    = 4;   // Column E
+    var iCurrentCont = col('Current Contact');
+    var iFirst       = col('Name: First');
+    var iLast        = col('Name: Last');
+    var iFirmStatus  = col('Firm Status');
+    var iFirm        = hdrs.indexOf('Firm');
+    var iEmail       = hdrs.indexOf('Email');
+    var iCountry     = hdrs.indexOf('Country');
+    var iCategory    = col('Category of Membership');
 
-    const iContactRole  = col('Contact Role');
-    const iUserRoles    = col('User Roles');
-    const iCurrentCont  = col('Current Contact');
-    const iFirst        = col('Name: First');
-    const iLast         = col('Name: Last');
-    const iFirmStatus   = col('Firm Status');
-    const iFirm         = headers.findIndex(h => h.toLowerCase() === 'firm');
-    const iPhone        = col('Phone');
-    const iEmail        = col('Email');
-    const iAddress      = headers.findIndex(h => h.toLowerCase() === 'address');
-    const iCategory     = col('Category of Membership');
+    var total=0, kept=0, removed=0;
+    parsedOutput=[];
 
-    let total = 0, kept = 0, removed = 0;
-    parsedOutput = [];
+    for (var i=1; i<allRows.length; i++) {
+      var row=allRows[i]; total++;
+      function get(idx){ return (idx>=0&&idx<row.length)?row[idx].trim():''; }
 
-    for (let i = 1; i < allRows.length; i++) {
-      const cols = allRows[i];
-      const get = idx => (idx >= 0 && idx < cols.length) ? cols[idx].trim() : '';
+      if (get(iCurrentCont).toLowerCase()!=='yes'){removed++;continue;}
+      if (ALLOWED_STATUSES.indexOf(get(iFirmStatus).toLowerCase())===-1){removed++;continue;}
 
-      total++;
+      var email=get(iEmail);
+      var domain=email.indexOf('@')!==-1?email.split('@')[1].toLowerCase():'';
+      if (EXCLUDED_DOMAINS.indexOf(domain)!==-1){removed++;continue;}
 
-      // Current Contact must be Yes
-      if (get(iCurrentCont).toLowerCase() !== 'yes') { removed++; continue; }
+      var firmLower=get(iFirm).toLowerCase();
+      var isTestFirm=false;
+      for (var t=0;t<TEST_FIRM_PATTERNS.length;t++){
+        if (firmLower===TEST_FIRM_PATTERNS[t]||firmLower.indexOf(TEST_FIRM_PATTERNS[t])===0){isTestFirm=true;break;}
+      }
+      if (isTestFirm){removed++;continue;}
 
-      // Firm Status must be Full, Provisional or Blank
-      if (!ALLOWED_STATUSES.includes(get(iFirmStatus).toLowerCase())) { removed++; continue; }
+      // User Roles TRUE/FALSE from col B (newline separated)
+      var userRolesRaw = get(iUserRoles).split('\n').map(function(s){return s.trim();});
+      var urFlags = {};
+      USER_ROLES.forEach(function(r){ urFlags[r] = userRolesRaw.indexOf(r)!==-1 ? 'TRUE' : 'FALSE'; });
 
-      // Email domain exclusion
-      const email = get(iEmail);
-      const domain = email.includes('@') ? email.split('@')[1].toLowerCase() : '';
-      if (EXCLUDED_DOMAINS.includes(domain)) { removed++; continue; }
-
-      // Test firm exclusion
-      const firmLower = get(iFirm).toLowerCase();
-      if (TEST_FIRM_PATTERNS.some(p => firmLower === p || firmLower.startsWith(p))) { removed++; continue; }
-
-      // Contact Role TRUE/FALSE
-      const contactRole = get(iContactRole);
-      const crFlags = {};
-      CONTACT_ROLES.forEach(r => {
-        crFlags['CR: ' + r] = contactRole === r ? 'TRUE' : 'FALSE';
-      });
-
-      // User Roles TRUE/FALSE — split on real newlines inside the field
-      const userRolesRaw = get(iUserRoles).split('\n').map(s => s.trim());
-      const urFlags = {};
-      USER_ROLES.forEach(r => {
-        urFlags['UR: ' + r] = userRolesRaw.includes(r) ? 'TRUE' : 'FALSE';
-      });
+      // Contact Type TRUE/FALSE from col E (comma separated)
+      var contTypeRaw = get(iContType).split(',').map(function(s){return s.trim();});
+      var ctFlags = {};
+      CONTACT_TYPES.forEach(function(r){ ctFlags[r] = contTypeRaw.indexOf(r)!==-1 ? 'TRUE' : 'FALSE'; });
 
       kept++;
-      parsedOutput.push({
-        'Email Address':  email,
-        'First Name':     get(iFirst),
-        'Last Name':      get(iLast),
-        'Organization':   get(iFirm),
-        'Address':        get(iAddress),
-        'Phone Number':   get(iPhone),
-        'Firm Status':    get(iFirmStatus),
-        'Category':       get(iCategory),
-        ...crFlags,
-        ...urFlags,
-      });
+      var record = {
+        'Email Address': email,
+        'First Name':    get(iFirst),
+        'Last Name':     get(iLast),
+        'Organization':  get(iFirm),
+        'Country':       get(iCountry),
+        'Firm Status':   get(iFirmStatus),
+        'Category of Membership': get(iCategory)
+      };
+      USER_ROLES.forEach(function(r){ record[r]=urFlags[r]; });
+      CONTACT_TYPES.forEach(function(r){ record[r]=ctFlags[r]; });
+      parsedOutput.push(record);
     }
 
-    document.getElementById('statTotal').textContent   = total;
-    document.getElementById('statKept').textContent    = kept;
-    document.getElementById('statRemoved').textContent = removed;
+    document.getElementById('statTotal').textContent=total;
+    document.getElementById('statKept').textContent=kept;
+    document.getElementById('statRemoved').textContent=removed;
 
-    // Preview
-    previewBody.innerHTML = '';
-    const previewCols = [
-      'Email Address','First Name','Last Name','Organization','Address','Phone Number','Firm Status','Category',
-      'CR: Contact','CR: Audit Supervisor','CR: Invoicing Supervisor','CR: Background Check Supervisor',
-      'UR: Auditor Supervisor','UR: Invoicing Supervisor','UR: CPD Training Supervisor','UR: Background Check Supervisor'
-    ];
-    parsedOutput.slice(0, 10).forEach(row => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = previewCols.map(c => `<td title="${row[c] || ''}">${row[c] || ''}</td>`).join('');
+    previewBody.innerHTML='';
+    parsedOutput.slice(0,10).forEach(function(r){
+      var tr=document.createElement('tr');
+      tr.innerHTML=OUTPUT_HEADERS.map(function(h){var v=r[h]||'';return '<td title="'+v+'">'+v+'</td>';}).join('');
       previewBody.appendChild(tr);
     });
-
-    resultsEl.style.display = 'block';
-    setStatus(`✓ Done! ${kept} contacts ready for MailChimp.`, 'ok');
-    setStatus(`✓ Done! ${kept} contacts ready for MailChimp.`, 'ok');
+    resultsEl.style.display='block';
+    setStatus('Done! '+kept+' contacts ready for MailChimp.','ok');
   }
 
-  downloadBtn.addEventListener('click', () => {
+  downloadBtn.addEventListener('click', function() {
     if (!parsedOutput.length) return;
-
-    const headers = [
-      'Email Address','First Name','Last Name','Organization','Address','Phone Number','Firm Status','Category',
-      'CR: Contact','CR: Audit Supervisor','CR: Invoicing Supervisor','CR: Background Check Supervisor',
-      'UR: Auditor Supervisor','UR: Invoicing Supervisor','UR: CPD Training Supervisor','UR: Background Check Supervisor'
-    ];
-
-    const escape = v => `"${(v || '').replace(/"/g, '""')}"`;
-    const csv = [
-      headers.map(escape).join(','),
-      ...parsedOutput.map(row => headers.map(h => escape(row[h])).join(','))
-    ].join('\r\n');
-
-    const userLabel = document.getElementById('fileNameInput').value.trim();
-    const filename  = userLabel ? dateStr + ' ' + userLabel + '.csv' : dateStr + ' mailchimp-firms.csv';
-
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a');
-    a.href = url; a.download = filename; a.click();
+    function esc(v){return '"'+(v||'').replace(/"/g,'""')+'"';}
+    var csv=[OUTPUT_HEADERS.map(esc).join(',')].concat(
+      parsedOutput.map(function(r){return OUTPUT_HEADERS.map(function(h){return esc(r[h]);}).join(',');})
+    ).join('\r\n');
+    var label=document.getElementById('fileNameInput').value.trim();
+    var filename=(label?dateStr+' '+label:dateStr+' mailchimp-firms')+'.csv';
+    var blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');
+    a.href=url; a.download=filename; a.click();
     URL.revokeObjectURL(url);
   });
 
-  function setStatus(msg, type) {
-    statusEl.className = 'status-' + type;
-    statusEl.textContent = msg;
-  }
+  function setStatus(msg,type){ statusEl.className='status-'+type; statusEl.textContent=msg; }
+})();
 </script>
 </body>
 </html>

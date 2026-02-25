@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APSCA Firms → MailChimp Cleaner</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1a2e;
+    --paper: #f5f0e8;
+    --accent: #c84b31;
+    --mid: #8a7e6e;
+    --light: #e8e0d0;
+    --green: #2d6a4f;
+  }
+
+  body {
+    font-family: 'DM Mono', monospace;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 40px 24px;
+  }
+
+  .container { max-width: 780px; margin: 0 auto; }
+
+  header {
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 20px;
+    margin-bottom: 40px;
+  }
+
+  .title {
+    font-family: 'Fraunces', serif;
+    font-size: 2.4rem;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  .title span {
+    color: var(--accent);
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  .subtitle {
+    font-size: 0.75rem;
+    color: var(--mid);
+    margin-top: 8px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .rules-box {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 20px 24px;
+    margin-bottom: 32px;
+    font-size: 0.72rem;
+    line-height: 1.8;
+    border-radius: 2px;
+  }
+
+  .rules-box strong {
+    color: #f0b429;
+    display: block;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .rules-box ul { list-style: none; padding: 0; }
+  .rules-box li::before { content: '→ '; color: var(--accent); }
+
+  .drop-zone {
+    border: 2px dashed var(--mid);
+    padding: 48px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+    border-radius: 2px;
+    margin-bottom: 24px;
+  }
+
+  .drop-zone:hover, .drop-zone.drag-over {
+    border-color: var(--accent);
+    background: #fff8f6;
+  }
+
+  .drop-zone .icon { font-size: 2.5rem; margin-bottom: 12px; }
+
+  .drop-zone p { font-size: 0.8rem; color: var(--mid); }
+
+  .drop-zone p strong {
+    color: var(--ink);
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 4px;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+  }
+
+  #fileInput { display: none; }
+
+  .btn {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 14px 32px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s;
+    border-radius: 2px;
+  }
+
+  .btn:hover { background: #a83a23; }
+  .btn:disabled { background: var(--mid); cursor: not-allowed; }
+
+  .btn-secondary { background: var(--green); margin-left: 12px; }
+  .btn-secondary:hover { background: #1e4d38; }
+
+  #status { margin: 24px 0; font-size: 0.78rem; min-height: 24px; }
+  .status-ok { color: var(--green); }
+  .status-err { color: var(--accent); }
+  .status-info { color: var(--mid); }
+
+  #results { display: none; margin-top: 32px; }
+
+  .results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 2px solid var(--ink);
+    padding-top: 20px;
+    margin-bottom: 16px;
+  }
+
+  .results-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .stat {
+    background: white;
+    border: 1px solid var(--light);
+    padding: 16px;
+    text-align: center;
+    border-radius: 2px;
+  }
+
+  .stat-num {
+    font-family: 'Fraunces', serif;
+    font-size: 2rem;
+    font-weight: 600;
+    display: block;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-num.green { color: var(--green); }
+  .stat-num.red { color: var(--accent); }
+  .stat-label { font-size: 0.65rem; color: var(--mid); text-transform: uppercase; letter-spacing: 0.08em; }
+
+  .preview-table-wrap {
+    overflow-x: auto;
+    background: white;
+    border: 1px solid var(--light);
+    border-radius: 2px;
+    margin-bottom: 24px;
+    max-height: 320px;
+    overflow-y: auto;
+  }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.68rem; }
+
+  thead th {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 10px 14px;
+    text-align: left;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    letter-spacing: 0.05em;
+  }
+
+  tbody tr:nth-child(even) { background: #faf8f4; }
+
+  tbody td {
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--light);
+    white-space: nowrap;
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .preview-note { font-size: 0.68rem; color: var(--mid); margin-bottom: 16px; font-style: italic; }
+
+  footer {
+    margin-top: 60px;
+    border-top: 1px solid var(--light);
+    padding-top: 16px;
+    font-size: 0.65rem;
+    color: var(--mid);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <h1 class="title">APSCA Firms <span>→ MailChimp</span> Cleaner</h1>
+    <p class="subtitle">Drop your firms contact export. Get a clean import file.</p>
+  </header>
+
+  <div class="rules-box">
+    <strong>Applied rules every time</strong>
+    <ul>
+      <li>Excludes anyone where Current Contact = No</li>
+      <li>Only keeps Firm Status of Full, Provisional, or Blank</li>
+      <li>Excludes @theapsca.org and @ksensetech.com email addresses</li>
+      <li>Excludes test firms (Test Firm 1, Test Firm 2, Ksense Test Firm etc.)</li>
+      <li>Outputs TRUE/FALSE columns for Contact Role: Contact, Audit Supervisor, Invoicing Supervisor, Background Check Supervisor</li>
+      <li>Outputs TRUE/FALSE columns for User Roles: Auditor Supervisor, Invoicing Supervisor, CPD Training Supervisor, Background Check Supervisor</li>
+    </ul>
+  </div>
+
+  <div class="drop-zone" id="dropZone">
+    <div class="icon">📂</div>
+    <p><strong>Drop your CSV file here</strong>click to browse</p>
+    <input type="file" id="fileInput" accept=".csv">
+  </div>
+
+  <div style="margin-bottom: 24px;">
+    <label style="display:block; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--mid); margin-bottom:8px;">File name for download</label>
+    <div style="display:flex; align-items:center; gap:0; background:white; border:1px solid var(--light); border-radius:2px; overflow:hidden;">
+      <span style="padding:12px 14px; background:var(--light); font-size:0.75rem; color:var(--mid); white-space:nowrap; border-right:1px solid var(--light);" id="datePrefix"></span>
+      <input type="text" id="fileNameInput" placeholder="e.g. APSCA Firms" style="flex:1; border:none; outline:none; padding:12px 14px; font-family:'DM Mono',monospace; font-size:0.78rem; color:var(--ink); background:white;">
+      <span style="padding:12px 14px; font-size:0.75rem; color:var(--mid); background:var(--light); border-left:1px solid var(--light);">.csv</span>
+    </div>
+  </div>
+
+  <button class="btn" id="processBtn" disabled>Process File</button>
+
+  <div id="status"></div>
+
+  <div id="results">
+    <div class="results-header">
+      <span class="results-title">Results</span>
+      <div>
+        <button class="btn btn-secondary" id="downloadBtn">⬇ Download CSV</button>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <span class="stat-num" id="statTotal">—</span>
+        <span class="stat-label">Rows in file</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num green" id="statKept">—</span>
+        <span class="stat-label">Contacts kept</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num red" id="statRemoved">—</span>
+        <span class="stat-label">Excluded</span>
+      </div>
+    </div>
+
+    <p class="preview-note">Showing first 10 rows preview</p>
+    <div class="preview-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Email Address</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Organization</th>
+            <th>Address</th>
+            <th>Phone Number</th>
+            <th>Firm Status</th>
+            <th>Category</th>
+            <th>CR: Contact</th>
+            <th>CR: Audit Supervisor</th>
+            <th>CR: Invoicing Supervisor</th>
+            <th>CR: Background Check Supervisor</th>
+            <th>UR: Auditor Supervisor</th>
+            <th>UR: Invoicing Supervisor</th>
+            <th>UR: CPD Training Supervisor</th>
+            <th>UR: Background Check Supervisor</th>
+          </tr>
+        </thead>
+        <tbody id="previewBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer>APSCA Firms MailChimp Cleaner &nbsp;·&nbsp; Drop the same file every time, always get a clean result</footer>
+</div>
+
+<script>
+  let parsedOutput = [];
+  let rawFile = null;
+
+  const today = new Date();
+  const dateStr = today.getFullYear() + '.' +
+    String(today.getMonth()+1).padStart(2,'0') + '.' +
+    String(today.getDate()).padStart(2,'0');
+  document.getElementById('datePrefix').textContent = dateStr + ' ';
+
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+  const processBtn = document.getElementById('processBtn');
+  const statusEl = document.getElementById('status');
+  const resultsEl = document.getElementById('results');
+  const previewBody = document.getElementById('previewBody');
+  const downloadBtn = document.getElementById('downloadBtn');
+
+  dropZone.addEventListener('click', () => fileInput.click());
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file && file.name.endsWith('.csv')) { rawFile = file; setFileReady(file.name); }
+  });
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files[0]) { rawFile = fileInput.files[0]; setFileReady(fileInput.files[0].name); }
+  });
+
+  function setFileReady(name) {
+    dropZone.querySelector('p').innerHTML = `<strong>${name}</strong>ready to process`;
+    processBtn.disabled = false;
+    statusEl.innerHTML = '';
+    resultsEl.style.display = 'none';
+    parsedOutput = [];
+  }
+
+  processBtn.addEventListener('click', () => {
+    if (!rawFile) return;
+    const reader = new FileReader();
+    reader.onload = e => processCSV(e.target.result);
+    reader.readAsText(rawFile, 'utf-8');
+  });
+
+  // Proper CSV parser — handles multiline quoted fields correctly
+  function parseCSV(text) {
+    const rows = [];
+    let fields = [];
+    let cur = '';
+    let inQuotes = false;
+
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      const next = text[i + 1];
+
+      if (ch === '"') {
+        if (inQuotes && next === '"') { cur += '"'; i++; }
+        else inQuotes = !inQuotes;
+      } else if (ch === ',' && !inQuotes) {
+        fields.push(cur); cur = '';
+      } else if (ch === '\r' && next === '\n' && !inQuotes) {
+        i++;
+        fields.push(cur); cur = '';
+        if (fields.some(f => f !== '')) rows.push(fields);
+        fields = [];
+      } else if (ch === '\n' && !inQuotes) {
+        fields.push(cur); cur = '';
+        if (fields.some(f => f !== '')) rows.push(fields);
+        fields = [];
+      } else {
+        cur += ch;
+      }
+    }
+    fields.push(cur);
+    if (fields.some(f => f !== '')) rows.push(fields);
+    return rows;
+  }
+
+  function cleanVal(str) {
+    return (str || '').replace(/<br\s*\/?>/gi, ' ').replace(/&amp;/g, '&').trim();
+  }
+
+  const EXCLUDED_DOMAINS   = ['theapsca.org', 'ksensetech.com'];
+  const ALLOWED_STATUSES   = ['full', 'provisional', ''];
+  const TEST_FIRM_PATTERNS = ['test firm1', 'test firm 1', 'test firm 2', 'test firm2', 'ksense test firm'];
+
+  const CONTACT_ROLES = ['Contact', 'Audit Supervisor', 'Invoicing Supervisor', 'Background Check Supervisor'];
+  const USER_ROLES    = ['Auditor Supervisor', 'Invoicing Supervisor', 'CPD Training Supervisor', 'Background Check Supervisor'];
+
+  function processCSV(text) {
+    text = text.replace(/^\uFEFF/, '');
+    const allRows = parseCSV(text);
+    if (allRows.length < 2) { setStatus('File appears empty or invalid.', 'err'); return; }
+
+    const headers = allRows[0].map(cleanVal);
+    const col = name => headers.findIndex(h => h.toLowerCase().includes(name.toLowerCase()));
+
+    const iContactRole  = col('Contact Role');
+    const iUserRoles    = col('User Roles');
+    const iCurrentCont  = col('Current Contact');
+    const iFirst        = col('Name: First');
+    const iLast         = col('Name: Last');
+    const iFirmStatus   = col('Firm Status');
+    const iFirm         = headers.findIndex(h => h.toLowerCase() === 'firm');
+    const iPhone        = col('Phone');
+    const iEmail        = col('Email');
+    const iAddress      = headers.findIndex(h => h.toLowerCase() === 'address');
+    const iCategory     = col('Category of Membership');
+
+    let total = 0, kept = 0, removed = 0;
+    parsedOutput = [];
+
+    for (let i = 1; i < allRows.length; i++) {
+      const cols = allRows[i];
+      const get = idx => (idx >= 0 && idx < cols.length) ? cols[idx].trim() : '';
+
+      total++;
+
+      // Current Contact must be Yes
+      if (get(iCurrentCont).toLowerCase() !== 'yes') { removed++; continue; }
+
+      // Firm Status must be Full, Provisional or Blank
+      if (!ALLOWED_STATUSES.includes(get(iFirmStatus).toLowerCase())) { removed++; continue; }
+
+      // Email domain exclusion
+      const email = get(iEmail);
+      const domain = email.includes('@') ? email.split('@')[1].toLowerCase() : '';
+      if (EXCLUDED_DOMAINS.includes(domain)) { removed++; continue; }
+
+      // Test firm exclusion
+      const firmLower = get(iFirm).toLowerCase();
+      if (TEST_FIRM_PATTERNS.some(p => firmLower === p || firmLower.startsWith(p))) { removed++; continue; }
+
+      // Contact Role TRUE/FALSE
+      const contactRole = get(iContactRole);
+      const crFlags = {};
+      CONTACT_ROLES.forEach(r => {
+        crFlags['CR: ' + r] = contactRole === r ? 'TRUE' : 'FALSE';
+      });
+
+      // User Roles TRUE/FALSE — split on real newlines inside the field
+      const userRolesRaw = get(iUserRoles).split('\n').map(s => s.trim());
+      const urFlags = {};
+      USER_ROLES.forEach(r => {
+        urFlags['UR: ' + r] = userRolesRaw.includes(r) ? 'TRUE' : 'FALSE';
+      });
+
+      kept++;
+      parsedOutput.push({
+        'Email Address':  email,
+        'First Name':     get(iFirst),
+        'Last Name':      get(iLast),
+        'Organization':   get(iFirm),
+        'Address':        get(iAddress),
+        'Phone Number':   get(iPhone),
+        'Firm Status':    get(iFirmStatus),
+        'Category':       get(iCategory),
+        ...crFlags,
+        ...urFlags,
+      });
+    }
+
+    document.getElementById('statTotal').textContent   = total;
+    document.getElementById('statKept').textContent    = kept;
+    document.getElementById('statRemoved').textContent = removed;
+
+    // Preview
+    previewBody.innerHTML = '';
+    const previewCols = [
+      'Email Address','First Name','Last Name','Organization','Address','Phone Number','Firm Status','Category',
+      'CR: Contact','CR: Audit Supervisor','CR: Invoicing Supervisor','CR: Background Check Supervisor',
+      'UR: Auditor Supervisor','UR: Invoicing Supervisor','UR: CPD Training Supervisor','UR: Background Check Supervisor'
+    ];
+    parsedOutput.slice(0, 10).forEach(row => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = previewCols.map(c => `<td title="${row[c] || ''}">${row[c] || ''}</td>`).join('');
+      previewBody.appendChild(tr);
+    });
+
+    resultsEl.style.display = 'block';
+    setStatus(`✓ Done! ${kept} contacts ready for MailChimp.`, 'ok');
+    setStatus(`✓ Done! ${kept} contacts ready for MailChimp.`, 'ok');
+  }
+
+  downloadBtn.addEventListener('click', () => {
+    if (!parsedOutput.length) return;
+
+    const headers = [
+      'Email Address','First Name','Last Name','Organization','Address','Phone Number','Firm Status','Category',
+      'CR: Contact','CR: Audit Supervisor','CR: Invoicing Supervisor','CR: Background Check Supervisor',
+      'UR: Auditor Supervisor','UR: Invoicing Supervisor','UR: CPD Training Supervisor','UR: Background Check Supervisor'
+    ];
+
+    const escape = v => `"${(v || '').replace(/"/g, '""')}"`;
+    const csv = [
+      headers.map(escape).join(','),
+      ...parsedOutput.map(row => headers.map(h => escape(row[h])).join(','))
+    ].join('\r\n');
+
+    const userLabel = document.getElementById('fileNameInput').value.trim();
+    const filename  = userLabel ? dateStr + ' ' + userLabel + '.csv' : dateStr + ' mailchimp-firms.csv';
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url; a.download = filename; a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  function setStatus(msg, type) {
+    statusEl.className = 'status-' + type;
+    statusEl.textContent = msg;
+  }
+</script>
+</body>
+</html>
